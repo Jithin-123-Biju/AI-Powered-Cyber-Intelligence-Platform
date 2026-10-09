@@ -57,10 +57,9 @@
    npm install
    ```
 
-3. Start the Next.js development server:
+3. Start the python development server:
    ```powershell
-   npm run dev
-   ```
+   python -m uvicorn main:app --reload --port 8000
 
 4. Open your browser and navigate to:
    ```
