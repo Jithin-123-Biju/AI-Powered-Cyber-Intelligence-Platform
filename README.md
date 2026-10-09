@@ -1,79 +1,87 @@
-OPCODE IMPACT 2026 Hackthon
+# AI-Powered-Cyber-Intelligence-Platform
 
+> Production-Grade Conversational AI for Digital Forensics and Cyber Threat Intelligence
 
-Team ID: OPC022
+**AI-Powered-Cyber-Intelligence-Platform** is an intelligent, ChatGPT-inspired investigation workspace built for cybersecurity incident responders, digital forensics analysts, and SOC teams. It eliminates conventional dashboard clutter (tables, oversized cards, and redundant graphs on homepages) in favor of a focused, conversational workflow where analysts upload evidence, interrogate suspicious activity, correlate threat intelligence, and generate formal forensic reports in one unified stream.
 
- 1. Problem Statement:
+---
 
-Security analysts face severe alert fatigue and prolonged Time-to-Detect (TTD) when dealing with massive volumes of raw endpoint logs and network telemetry. Traditional manual forensic investigations are too slow, allowing attackers to move laterally and exfiltrate data, while evasive zero-day threats frequently bypass signature-based detection systems. Furthermore, siloed threat data prevents real-time correlation of local anomalies with global cyber threat intelligence, delaying critical incident response.
+## ⚡ Core Experience & Design Architecture
 
- 2. Solution Title
-AI-Powered Cyber Intelligence Platform.
+### 1. Minimalist ChatGPT-Inspired Homepage
+- **Deep Slate Architecture**: Dark, utility-first visual design using Tailwind CSS scales (`bg-slate-950`, `border-white/10`).
+- **Centered Hero**: Distinctive branding (*AI-Powered-Cyber-Intelligence-Platform*), concise value proposition, and an uncrowded interface.
+- **Large Floating Message Composer**: Multi-line auto-expanding input with file attachment controls, drag-and-drop evidence ingestion, and intuitive keyboard interactions (Enter to send, Shift + Enter for new lines).
+- **Curated Starter Suggestions**: Clean prompt suggestions beneath the composer to immediately initiate log triage, C2 URL assessment, script deobfuscation, or report generation.
 
- 3. Solution Description:
+### 2. Streamlined Conversational Investigation Stream
+- **Collapsible Sidebar**: New Chat ("New Investigation"), searchable conversation history grouped by date (Today, Yesterday, Previous 7 Days), and settings.
+- **Natural Multi-Turn Context**: Preserves previous findings and uploaded artifacts across follow-up queries.
+- **In-Message Evidence Details**: Ingested files are displayed cleanly with verified cryptographic SHA-256 hashes.
+- **Explainable Threat Findings**: Markdown explanations, inline MITRE ATT&CK® TTP alignments, and preliminary risk matrices displayed naturally within AI responses.
+- **Fixed Bottom Composer**: Anchored cleanly at the base of the active conversation for seamless interaction.
+- **Slide-Over Evidence Inspector**: Optional slide-over drawer summarizing ingested files, hashes, and extracted IOCs for quick copying to firewall rules without obstructing the conversation.
 
-Our platform is a centralized cybersecurity architecture that automates Incident Response (IR) and Digital Forensics (DFIR) by rapidly ingesting and parsing raw digital evidence (syslogs, web logs, auth logs). It leverages unsupervised machine learning (Isolation Forests) for signatureless anomaly detection to catch zero-day threats and abnormal payload structures. Finally, it cross-references extracted Indicators of Compromise (IOCs) with global Threat Intelligence (STIX/MISP) to automatically generate human-readable forensic timelines and incident narratives.
+### 3. Safe, Non-Destructive Evidence Processing
+- Supports `.log`, `.txt`, `.csv`, `.json`, `.xml`, `.pcap`, `.pcapng`, and `.evtx`.
+- **In-Memory SHA-256 Digest**: Computes a cryptographic SHA-256 hash on upload using Node.js `crypto` before extracting readable ASCII text.
+- **Zero-Execution Sandbox**: Artifacts are triaged purely in memory. No scripts, macros, or binary executables are run.
 
- 4. Architecture Diagram
-Workflow:
+### 4. PostgreSQL Forensic Storage Integration
+- **Relational Schema**: Backend SQLAlchemy models and API endpoints structured specifically for PostgreSQL storage and retrieval:
+  - `forensic_cases`: Case metadata, triage status, and risk classifications.
+  - `chat_messages`: Full multi-turn conversation history and forensic findings.
+  - `forensic_artifacts`: File hashes (SHA-256), MIME types, byte sizes, and parsed summaries.
+  - `threat_indicators`: Extracted IPs, domains, hashes, and MITRE ATT&CK TTP links.
+- **Synchronized Data Access**: Real-time storage interface (`/api/postgres-sync`) supporting custom database connection strings configured via the Settings modal.
 
-1. Ingestion & Parsing: The FastAPI backend receives log files via a REST API. A custom Regex Extractor parses out critical IOCs (IPs, Domains, MD5/SHA256 hashes, timestamps).
-2. Asynchronous Processing: Celery and a Redis message broker handle heavy AI and CTI tasks in the background so the API remains responsive.
-3. AI Anomaly Scoring: Scikit-Learn's Isolation Forest models evaluate the parsed payloads to assign anomaly risk scores based on structural irregularities and payload metrics.
-4. CTI Correlation: Extracted indicators are cross-referenced with MISP/STIX 2.1 threat feeds to identify known threat actor campaigns.
-5. Storage & Search: Results are stored in PostgreSQL for relational integrity (cases, artifacts) and Elasticsearch for rapid forensic querying.
+### 5. Multi-Format Report Export
+- Compiles official forensic triage briefs downloadable as:
+  - **Markdown (`.md`)**
+  - **Structured JSON (`.json`)**
+  - **Print / PDF** (with print-optimized stylesheets)
 
- 5. Technology Stack:
+---
 
-Frontend: React.js / Next.js with Tailwind CSS
-Backend: FastAPI (Python 3.10), Celery (Task Queue), Pydantic (Data validation)
-Database: PostgreSQL (via `asyncpg` and SQLAlchemy), Elasticsearch (for rapid log search), Redis (for Celery brokering)
-Other Technologies:  Scikit-Learn (Isolation Forest ML), MISP / STIX 2.1 API (Threat Intelligence), Docker & Docker Compose (Containerization)
+## 🚀 Quick Start Guide
 
-6. Quick Start Guide
+### Running the Full-Stack Conversational App
 
-Prerequisites:
+1. Navigate to the `Frontend` directory:
+   ```powershell
+   cd "c:\Users\jithi\OneDrive\Documents\AI Cyber Threat Intelligence Platform\Frontend"
+   ```
 
-Docker and Docker Compose installed on your system.
- Port availability for `8000` (API), `5432` (Postgres), `6379` (Redis), and `9200` (Elasticsearch).
+2. Install dependencies (if not already installed):
+   ```powershell
+   npm install
+   ```
 
-Installation & Execution:
+3. Start the Next.js development server:
+   ```powershell
+   npm run dev
+   ```
 
-  bash
-1. Clone the repository
-git clone https://github.com/jithin-123-biju/ai-cyber-threat-platform.git
-cd ai-cyber-threat-platform/Backend
+4. Open your browser and navigate to:
+   ```
+   http://localhost:3000
+   ```
+   *(If port 3000 is occupied, Next.js will automatically run on `http://localhost:3001`).*
 
-2. Set up environment variables
-3.cp .env.example .env 
-4.Build and start all services using Docker Composedocker-compose up --build -d
+---
 
- 4. Access the API documentation
-Open your browser and navigate to: http://localhost:8000/docs
+## ⚙️ Optional Backend & Provider Configuration
 
+AI-Powered-Cyber-Intelligence-Platform functions out of the box in **100% verified offline deterministic mode** with zero external API keys required. All forensic heuristics, SHA-256 calculations, and MITRE ATT&CK mappings run locally.
 
- 7. Output Screenshots
+To connect external providers, use the UI **Settings modal** (gear icon in sidebar) or set environment variables in `Frontend/.env.local`:
+- `GROQ_API_KEY`: Enables real-time Llama-3.3-70B model narrative generation.
+- `VIRUSTOTAL_API_KEY`: Enables live VirusTotal v3 IP/domain reputation queries.
+- `DATABASE_URL`: PostgreSQL connection string (defaults to `postgresql://forensic_user:forensic_password@localhost:5432/forensic_db`).
 
- The dashboard displays an active forensic investigation case, visualizing the chronological timeline of the cyberattack based on parsed timestamps. It highlights high-severity log anomalies flagged by the machine learning model alongside their corresponding Threat Actor CTI matches from MISP.
+---
 
- 8. Future Scope
-
-Agentic AI Responders (SOAR): Implementing autonomous AI agents capable of actively isolating compromised endpoints and updating firewall blocklists in real-time based on high-severity triage alerts.
-     Cross-Cloud Ephemeral Forensics: Expanding the ingestion engine to capture volatile memory dumps and API logs from ephemeral cloud containers (Kubernetes, AWS EKS) before they spin down.
-    LLM-Driven Report Generation: Integrating Large Language Models directly into the pipeline to read the triaged JSON data and auto-draft executive summaries for incident responders.
-
-9. Team Contributions
-
- Member Name | Contribution
-
-Jithin C Biju: Developed the FastAPI backend architecture, Docker containerization, and PostgreSQL database schemas and built the frontend dashboard.
-Aswin A: Implemented the ML Anomaly Detection engine (Isolation Forest) and the regex log parsing system.
-|Sanjay VR:Integrated MISP/STIX CTI feeds, configured the Celery/Redis async workersand.
-
- 10. Tools Used
-
-Tool / Platform | Purpose / Why Used 
-
-FastAPI & PostgreSQL: Provides a highly performant, asynchronous API framework and robust relational data storage necessary for enterprise security tools.
-Scikit-Learn (ML): Used the Isolation Forest algorithm for unsupervised machine learning to detect zero-day malware and behavioral anomalies without relying on known signatures.
-Docker & Celery: Docker ensures a unified deployment environment across all services, while Celery prevents machine learning tasks from blocking real-time API responses.
+## 🛡️ Forensic Chain of Custody & Security Guarantees
+- **Non-Destructive Parsing:** Evidence files are strictly read as read-only byte buffers. No scripts or binaries are executed.
+- **Truthful Telemetry:** If an external feed (VirusTotal) or model (Groq) is not configured, the platform transparently labels the status as "Not configured — local heuristics used" rather than fabricating artificial scores.
+- **Data Privacy:** Sensitive logs persist in local browser storage (`localStorage`) or your private PostgreSQL database, never sent to third-party endpoints without authorization.
